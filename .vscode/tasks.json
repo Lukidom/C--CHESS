@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build C++ (auto compiler)",
+      "type": "shell",
+      "command": "$compiler = (Get-Command g++ -ErrorAction SilentlyContinue).Source; if (-not $compiler) { $compiler = (Get-Command clang++ -ErrorAction SilentlyContinue).Source }; if ($compiler) { & $compiler -std=c++17 -Wall -Wextra -pedantic main.cpp -o main.exe; exit $LASTEXITCODE } elseif (Get-Command cl -ErrorAction SilentlyContinue) { cl /EHsc /nologo /Fe:main.exe main.cpp; exit $LASTEXITCODE } else { Write-Error 'No C++ compiler found. Install MSYS2/MinGW (g++) or Visual Studio Build Tools.'; exit 1 }",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run main.exe",
+      "type": "shell",
+      "command": ".\\main.exe",
+      "dependsOn": "Build C++ (auto compiler)",
+      "group": "test"
+    }
+  ]
+}
